@@ -5,17 +5,17 @@
 * .NET Runtime
   * Core CLR (Common Language Runtime) 
   * Core FX - BCL (Base Class Labrary)
-* CTS (Common Type System)
-* CLS (Common Language Specification)
+* [CTS (Common Type System)](#общая-система-типов-cts)
+* [CLS (Common Language Specification)](#общеязыковая-спецификация-cls)
 
 Исполняющая среда (.NET Runtime) представляет собой коллекцию служб, которые требуются для выполнения скомпилированного кода. 
 
 Полученный в результате компиляции (например csc.exe) двоичный объект, называется *сборкой*.
 
 Сборка включает в себя:
-* IL/CIL/MCIL промежуточный код
-* Метаданные
-* Манифест
+* [IL/CIL/MCIL промежуточный код](#язык-cil)
+* [Метаданные](#метаданные-типов)
+* [Манифест](#манифест-сборки)
 
 ### Язык CIL
 

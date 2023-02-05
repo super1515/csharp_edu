@@ -6,7 +6,7 @@
 
 При запуске приложения, первым вызывается метод ``Main``. Если в проекте несколько классов с методом ``Main``, программу нужно компилировать с параметром компилятора StartupObject, чтобы указать, какой из методов ``Main`` будет использоваться в качестве точки входа. 
 
-Точку входа можно создавать с любой из сигнатур
+Точку входа можно создавать с любой из сигнатур:
 ```csharp
 static void Main() { }
 static int Main() { }
@@ -16,7 +16,7 @@ static int Main(string[] args) { }
 
 ### Асинхронный метод Main() [C# 7.1]
 
-Метод ``Main`` также может быть асинхронным 
+Метод ``Main`` также может быть асинхронным:
 ```csharp
 static async Task Main() { }
 static async Taskint Main() { }
@@ -26,7 +26,7 @@ static async Taskint Main(string[] args) { }
 
 ### Операторы верхнего уровня [C# 9.0]
 
-Точку входа можно задать неявно с помощью операторов верхнего уровня
+Точку входа можно задать неявно с помощью операторов верхнего уровня:
 ```csharp
 using System;
 Console.WriteLine(Hello, World!);
@@ -106,7 +106,7 @@ string str = string.Format("Give me {0:C} now!", 100);
 ## Системные типы данных
 
 В языке C# представлены различные фундаментальные типы данных, которые представлены ниже. 
-В таблице так же указана совместимость с CLS и полное имя каждого типа данных.
+В таблице также указана совместимость с CLS и полное имя каждого типа данных.
 Тип данных | Совместимость CLS | Полное имя | Диапозон значений | Описание
 --- | --- | --- | --- | ---
 ``bool`` | + | ``System.Boolean`` | ``true`` или ``false`` | Истина или ложь
@@ -119,8 +119,96 @@ string str = string.Format("Give me {0:C} now!", 100);
 ``long`` | + | ``System.Int64`` | От $-2^{63}$ до $2^{63}-1$ | 8 байт, со знаком
 ``ulong`` | - | ``System.UInt64`` | От 0 до $2^{64}-1$ | 8 байт, без знака
 ``char`` | + | ``System.Char`` | От U+0000 до U+ffff | 2 байта, символ Unicode
-``float`` | + | ``System.Single`` | От $-3.4 * 10^{38}$ до $3.4 * 10^{38}$ | 4 байта, с плавающей точкой
-``double`` | + | ``System.Double`` | От $\pm5.0 * 10^{-324}$ до $\pm1.7 * 10^{308}$ | 8 байт, с плавающей точкой
-``decimal`` | + | ``System.Decimal`` | От $\pm1.0 * 10^{-28}$ до $\pm7.9228 * 10^{28}$ | 16 байт, 28 знаков после запятой
+``float`` | + | ``System.Single`` | От $-3.4 * 10^{38}$ до $3.4 * 10^{38}$ | 4 байта, 8 знаков после запятой
+``double`` | + | ``System.Double`` | От $\pm5.0 * 10^{-324}$ до $\pm1.7 * 10^{308}$ | 8 байт, 15-16 знаков после запятой
+``decimal`` | + | ``System.Decimal`` | От $\pm1.0 * 10^{-28}$ до $\pm7.9228 * 10^{28}$ | 16 байт, 28-29 знаков после запятой
 ``string`` | + | ``System.String`` | $\inf$ | Набор символов Unicode
 ``object`` | + | ``System.Object`` | Любой тип | Базовый класс
+
+### Иерархия классов для типов данных
+
+Каждый тип является производным от класса ``System.Object``, для которого определен набор методов, таких как ``ToString()``, ``Equals()``, ``GetHashCode()``.
+
+Также многие числовые типы данных, структуры и перечисления являются производными от класса ``System.ValueType``. Потомки ``System.ValueType`` размещаются в стеке, а не в куче.
+
+### Члены типов данных
+
+#### Члены числовых типовых данных
+
+Для встроенных числовых типов данных определены уникальные свойства ``MinValue`` и ``MaxValue``. 
+В добавок, для чисел с плавающей точной определены свойства ``Epsilon``, ``Positivelnfinity``, ``NegativeInfinity``.
+
+```csharp
+Console.WriteLine("Min value for int: " + int.MinValue);
+Console.WriteLine("Epsilon for float: " + float.Epsilon);
+```
+
+#### Члены System.Boolean
+
+Для ``System.Boolean``определены свойства ``TrueString`` и ``FalseString``:
+
+```csharp
+Console.WriteLine("True: " + bool.TrueString);
+Console.WriteLine("False: " + bool.FalseString);
+```
+
+#### Члены System.Char
+
+С помощью статических методов ``IsDigit()``, ``IsLetter()``, ``IsWhiteSpace()``, ``IsPunctuation()`` можно определить является символ цифрой, буквой, пробелом или знаком пунктуации:
+```csharp
+string str = "5A !";
+Console.WriteLine("Digit: " + char.IsDigit(str[0]));
+Console.WriteLine("Letter: " + char.IsLetter(str[1]));
+Console.WriteLine("White Space: " + char.IsWhiteSpace(str, 2));
+Console.WriteLine("Punctuation: " + char.IsPunctuation(str, 3));
+```
+Можно заметить, что многие статические методы класса ``System.Char`` поддерживают два соглашения о вызове.
+
+#### Методы Parse() и TryParse()
+
+Статические методы ``Parse()`` и ``TryParse()`` преобразовывают строковый летерал в переменную, определенного типа данных:
+
+```csharp
+int myFirstInt = int.Parse("1234");
+int mySecondInt;
+if(int.TryParse("5678", out mySecondInt)) 
+    Console.WriteLine("My Second Int: " + mySecondInt);
+else 
+    Console.WriteLine("My Second Int isnt valid. Default value: " + mySecondInt);
+```
+В случае, если аргумент метода ``Parse()`` имеет неверный формат, то будет выброшено исключение. 
+Для решения этой проблемы можно воспользоваться методом ``TryParse()``, который вернет ``true`` при успешном преобразовании или ``false`` в противном случае.
+## Переменные
+
+Для объявления переменной необходимо указать тип данных и имя переменной:
+
+```csharp
+int num;
+```
+Использование переменной до присвоения ей значения приведет к ошибке на этапе компиляции. Присвоить значение переменной можно при объявлении или после него:
+```csharp
+int first = 1;
+int second = 2, third = 3;
+string fourth;
+fourth = "My string";
+```
+
+### Литерал default [C# 7.1]
+
+С помощью литерала ``default`` можно присвоить переменной стандартное значение, специфичное для типа данных:
+```csharp
+int first = default; // 0
+float second = default(float); // 0.0 - до C# 7.1
+```
+
+### Операция new [C# 9.0]
+
+Проинициализировать можно также с помощью стандартного конструктора:
+```csharp
+int first = new int(); // 0
+```
+
+C# 9.0 позволяет использовать сокращенную запись:
+```csharp
+int first = new(); // 0
+```

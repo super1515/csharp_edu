@@ -95,6 +95,12 @@ Console.WriteLine("Hello, {1}, {0}{2}{2}", "how are you", "man", "?");
 ```csharp
 Console.WriteLine("Сurrency {0:C}, Percentages {1:P}", cur, per);
 ```
+Также существует возможность задать выравнивание. 
+Положительное значение после запятой задает выравнивание по правому краю, отрицательное - выравнивание по левому краю. 
+Помимо всего прочего, это значение характеризует ширину поля:
+```csharp
+string s = String.Format("{0,10} {1,-10}\n", "First", "Second");
+```
 
 ### Форматирование строкового литерала
 
@@ -212,3 +218,62 @@ C# 9.0 позволяет использовать сокращенную зап
 ```csharp
 int first = new(); // 0
 ```
+
+### Типы System.DateTime и System.TimeSpan
+
+Структура ``DateTime`` представляет собой тип данных, характеризующий дату и время, которые могут быть форматированы различнымы способами. Тип ``DateTime`` так же содержит некоторые статические свойства.
+```csharp
+DateTime dateFirst = new DateTime(); // 1/1/0001 12:00:00 AM
+DateTime dateSecond = new DateTime(2008, 3, 1, 7, 0, 0); // 3/1/2008 7:00:00 AM
+DateTime date1 = DateTime.Now;
+DateTime date2 = DateTime.UtcNow;
+DateTime date3 = DateTime.Today;
+```
+Структура ``TimeSpan`` представляет интервал времени, характеризующийся днями, часами, минутами, секундами и миллисекундами:
+```csharp
+DateTime dateFirst = new DateTime(2020, 1, 1, 8, 0, 15);
+DateTime dateSecond = new DateTime(2020, 8, 18, 13, 30, 30);
+TimeSpan interval = dateSecond - dateFirst;
+Console.WriteLine("{0} - {1} = {2}", dateSecond, dateFirst, interval.ToString());
+Console.WriteLine("{0,-35} {1,20}", "Value of Days Component:", interval.Days);
+Console.WriteLine("{0,-35} {1,20}", "Total Number of Days:", interval.TotalDays);
+...
+Console.WriteLine("   {0,-35} {1,20:N0}", "Value of Milliseconds Component:", interval.Milliseconds);
+Console.WriteLine("   {0,-35} {1,20:N0}", "Total Number of Milliseconds:", interval.TotalMilliseconds);
+Console.WriteLine("   {0,-35} {1,20:N0}", "Ticks:", interval.Ticks);
+```
+
+### Пространство имен System.Numerics
+
+В пространстве имен ``System.Numerics`` существует структура ``BigInteger``. Этот тип данных является неизменяемым, как и строки, и позволяет манипулировать очень большими числовыми значениями, которые не ограничены ни сверху, ни снизу. 
+
+Для него определены простейшие математические операции и некоторые свойства. 
+Для инициализации переменной ``BigInteger`` можно воспользоваться статическим метолом ``Parse``:
+```csharp
+Biglnteger BigFirst = Biglnteger.Parse("123456789123456789123456789");
+Console.WriteLine("Value of BigSecond: ", BigFirst);
+Console.WriteLine("Even?: {0}", BigFirst.IsEven);
+Console.WriteLine("Power of two?: {0}", BigFirst.IsPowerOfTwo);
+Biglnteger BigSecond = BigFirst * Biglnteger.Parse("987654321987654321987654321");
+Console.WriteLine("Value of BigSecond: ", BigSecond);
+```
+
+Помимо всего прочего, в пространстве имен ``System.Numerics`` определена структура ``Complex`` для работы с комплексными числами.
+
+### Разделители групп цифр и двоичные литералы [C# 7.0/7.2]
+
+Разделители групп цифр, появившиеся в C# 7.0, позволяют визуально разделить число на несколько частей. 
+
+Помимо этого, в C# 7.0 появился новый литерал для двоичных значений.
+
+В версии C# 7.2 разрешено начинать двоичные и шестнадцатеричные литералы с символа подчеркивания.
+```csharp
+Console.WriteLine("Integer:" + 123_456);
+Console.WriteLine("Long: " + 123_456_789L);
+Console.WriteLine("Float: " + 123_456.1234F);
+Console.WriteLine("Double:" + 123_456.12);
+Console.WriteLine("Decimal: " = 123_456.12M);
+Console.WriteLine("Hex: " + Ox_00_00_FF); // C# 7.2
+Console.WriteLine("Hex: " + Ob_0011_0000); // C# 7.2
+```
+Обратите внимание, по умолчанию литерал целого числа имеет тип ``int``, а число с плавающей точкой тип ``double``. Однако, в примере выше использованы суффиксы, которые позволяют указать компилятору тип данных литерала числа. 

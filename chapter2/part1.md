@@ -29,7 +29,7 @@ static async Task<int> Main(string[] args) { }
 Точку входа можно задать неявно с помощью операторов верхнего уровня:
 ```csharp
 using System;
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Hello World!");
 ```
 Этот код аналогичен предыдущему:
 ```csharp
@@ -142,7 +142,7 @@ string str = string.Format("Give me {0:C} now!", 100);
 #### Члены числовых типовых данных
 
 Для встроенных числовых типов данных определены уникальные свойства ``MinValue`` и ``MaxValue``. 
-В добавок, для чисел с плавающей точной определены свойства ``Epsilon``, ``Positivelnfinity``, ``NegativeInfinity``.
+В добавок, для чисел с плавающей точкой определены свойства ``Epsilon``, ``PositiveInfinity``, ``NegativeInfinity``.
 
 ```csharp
 Console.WriteLine("Min value for int: " + int.MinValue);
@@ -172,7 +172,7 @@ Console.WriteLine("Punctuation: " + char.IsPunctuation(str, 3));
 
 #### Методы Parse() и TryParse()
 
-Статические методы ``Parse()`` и ``TryParse()`` преобразовывают строковый летерал в переменную, определенного типа данных:
+Статические методы ``Parse()`` и ``TryParse()`` преобразовывают строковый литерал в переменную, определенного типа данных:
 
 ```csharp
 int myFirstInt = int.Parse("1234");
@@ -200,7 +200,7 @@ static int SumOfSquares(int a, int b)
 ```
 Несмотря на то что переменные ``a`` и ``b`` имеют тип данных ``short``, а метод ``SumOfSquares`` принимает два аргумента типа ``int``, программа выполняется без ошибок.
 
-Такое поведение называется неявно *расширяющим* приведением типов. Действительно, диапазон значений ``int`` включен в диапазон ``short``. Такое приведение не может привести к переполнению, поэтому выполняется неявно.
+Такое поведение называется неявно *расширяющим* приведением типов. Действительно, диапазон значений ``short`` включен в диапазон ``int``. Такое приведение не может привести к переполнению, поэтому выполняется неявно.
 
 Модифицируем код следующим образом:
 ```csharp
@@ -382,7 +382,7 @@ string listTODO = first + second + third;
 Console.WriteLine(listTODO);
 Console.WriteLine(string.Concat("A list of what I'm doing now:\n", third.Replace("2", "1")));
 ```
-Обратите внимание, символ начала строки может отличаться в разных средах выполнения, для избежания ошибок форматирования имеет смысл воспользоваться свойством ``Environment.NewLine``.
+Обратите внимание, символ начала строки может отличаться в различных средах выполнения, для избежания ошибок форматирования имеет смысл воспользоваться свойством ``Environment.NewLine``.
 
 ### Управляющие последовательности
 
@@ -509,7 +509,7 @@ foreach(var ch in myStr)
 ```csharp
 string myStr = "Hello World!";
 int i = 0;
-while (myStr[i] != ' ')
+while (myStr[i] != ' ' && i < myStr.Length)
     Console.WriteLine($"{i}: {myStr[i++]}");
 ```
 
@@ -520,7 +520,7 @@ int i = 0;
 Console.WriteLine(@"Write ""exit"" if you need to stop the execution of the loop");
 do{
     Console.WriteLine($"{i}: {myStr[i++]}");
-}while(Console.ReadLine().ToLower() != "exit");
+}while(Console.ReadLine().ToLower() != "exit" && i < myStr.Length);
 ```
 
 ### Ключевые слова continue и break
@@ -590,7 +590,7 @@ else {
 
 ### Сопоставление с образцом в условных операторах [C# 7.0/9.0]
 
-C# поддерживает *сопоставление с образцом*, которое позволяет проверять переменную на соответствие типу и, в случае соответствия, присвоить ее переменной:
+C# поддерживает *сопоставление с образцом*, которое позволяет проверять переменную на соответствие типу и, в случае соответствия, присвоить ее переменной этого типа:
 ```csharp
 object myObj = 5;
 if (myObj is int myInt)

@@ -638,3 +638,119 @@ index = 3;
 Console.WriteLine(string.Join(", ", first));
 Console.WriteLine(string.Join(", ", second));
 ```
+
+### Оператор switch, изменения [C# 7.0]
+
+Оператор ``switch`` позволяет производить выбор на основе заранее определенного набора вариантов:
+```csharp
+int num;
+do
+{
+    Console.WriteLine("Enter an integer: ");
+} while (!int.TryParse(Console.ReadLine(), out num));
+switch ((int)Math.Log10(num < 0 ? num * -1 : num > 0 ? num : 1) + 1)
+{
+    case 1:
+        Console.WriteLine("There is one digit in the number");
+        break;
+    case 2:
+        Console.WriteLine("There are two digits in the number");
+        break;
+    case 3:
+        Console.WriteLine("There are three digits in the number");
+        break;
+    default:
+        Console.WriteLine("There are more than three digits in the number");
+        break;
+}
+```
+
+Помимо числовых значений оператор ``switch`` способен оценивать ``char``, ``bool`` и ``enum``. В C# 7.0 появилась возможность работы со ``string`` и некоторыми другими типами.
+
+Каждый блок ``case`` и блок ``default`` должны содержать ``return``, ``break`` или ``goto``. Тем не менее, блоки ``case`` можно комбинировать:
+```csharp
+case 1:
+case 2:
+    Console.WriteLine("There are one or two digits in the number");
+    break;
+```
+
+### Сопоставление с образцом в операторе switch [C# 7.0, 9.0]
+
+Как можно заметить, оператор ``switch`` выполняет сравнение исключительно с константными значениями, в C# 7.0 стало возможно производить сравнение с типами:
+```csharp
+object input = Console.ReadLine();
+input = int.TryParse((string) input, out _) ? int.Parse((string)input) : 
+    double.TryParse((string) input, out _) ? double.Parse((string)input) : input;
+switch (input)
+{
+    case int intValue:
+        Console.WriteLine("You entered an integer: " + intValue.GetType());
+        break;
+    case double doubleValue:
+        Console.WriteLine("You entered a double: " + doubleValue.GetType());
+        break;
+    case string stringValue:
+        Console.WriteLine("You entered string: " + stringValue.GetType());
+        break;
+    default:
+        Console.WriteLine("Failed to identify the type of variable");
+        break;
+}
+```
+В операторах ``switch`` также можно использовать конструкцию ``when``:
+```csharp
+    case int intValue when intValue >= 0:
+        Console.WriteLine("You entered a positive integer or zero: " + intValue.GetType());
+        break;
+    case int intValue when intValue < 0:
+        Console.WriteLine("You entered a negative integer: " + intValue.GetType());
+        break;
+```
+
+Начиная с C# 9.0 можно использовать другие приемы сопоставления с образцом, аналогично выражениям в условных операторах.
+
+### Лямбда операции в операторе switch [C# 8.0]
+C# 8.0 позволяет присваивать значение переменной, полученной в результате работы оператора ``switch``, в сокращенном формате.
+
+```csharp
+DayOfWeek day;
+do
+{
+    Console.WriteLine("Enter the day: ");
+} while (!Enum.TryParse(Console.ReadLine(), out day));
+Console.WriteLine(WhatToDo(day));
+
+static string WhatToDo(DayOfWeek day)
+{
+    switch (day)
+    {
+        case DayOfWeek.Monday:
+        case DayOfWeek.Tuesday:
+        case DayOfWeek.Wednesday:
+            return "Work!";
+        case DayOfWeek.Thursday:
+        case DayOfWeek.Friday:
+            return "Learn!";
+        default:
+            return "Get some rest!";
+    }
+}
+```
+
+В сокращенном виде:
+
+```csharp
+static string WhatToDo(DayOfWeek day)
+{
+    return day switch
+    {
+        DayOfWeek.Monday or
+        DayOfWeek.Tuesday or
+        DayOfWeek.Wednesday => "Work!",
+        DayOfWeek.Thursday or
+        DayOfWeek.Friday => "Learn!",
+        _ => "Get some rest!",
+    };
+}
+```
